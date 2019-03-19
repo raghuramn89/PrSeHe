@@ -1,4 +1,3 @@
 #!/bin/bash
 # This sript will give us CPU health status
-LoadAverage=$(top -b -n 1 | awk 'FNR == 1 { print $11 $12 $13 }')
-echo $LoadAverage
+top -b -n 1 | awk 'FNR == 1 { print "5 Minutes Average:" $11 "\n10 Minutes Average:"$12 "\n15 Minutes Average:" $13 }'
