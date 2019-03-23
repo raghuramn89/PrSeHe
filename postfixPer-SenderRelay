@@ -1,0 +1,39 @@
+#!/bin/bash
+# how to use postfix to send emails via relay
+# append the postfix configuration file main.cf and add below lines.
+# =======START========
+# Customization Configuration
+# Sender dependent sasl
+smtp_sender_dependent_authentication = yes
+sender_dependent_relayhost_maps = hash:/etc/postfix/sender_relay
+
+# specify SMTP relay host
+relayhost = [mail.vitelglobal.com]:587
+
+# enable SASL authentication
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
+smtp_sasl_security_options = noanonymous
+smtp_sasl_mechanism_filter = plain
+smtp_use_tls = yes
+# =============main.cf====end=====
+
+# Create a new file with below information
+# ====>>>vi /etc/postfix/sasl_passwd
+
+# per-sender authentication
+rayshawn@vitelglobal.com        rayshawn:password
+alerts@vitelglobal.com  alerts:password
+# Default relay host
+mail.vitelglobal.com:587        rayshawn:password
+
+
+# Create a new file with below information
+# ====>>>vi /etc/postfix/sender_relay
+rayshawn@vitelglobal.com        [mail.vitelglobal.com]:587
+alerts@vitelglobal.com  [mail.vitelglobal.com]:587
+
+# now run below commands
+# postmap /etc/postfix/sender_relay
+# postmap /etc/postfix/sasl_passwd
+# service postfix restart

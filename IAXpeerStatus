@@ -1,17 +1,14 @@
 #!/bin/bash
-# capturing whether IAX peers are in online or not
+# here we collect the status of iax peers. in the same way we can get the status of sip.
 IAXstatus=$(asterisk -rx "IAX2 show peers" | awk 'END{print $4}' | cut -d "[" -f2)
-# matching with if condition
 if [ $IAXstatus == 0 ]
 then
-# if condition true sending and alert email
-sendmail -t raghu@example.com << EOF
-	From: alerts@example.com
-	Subject: IAX Peers status is zero
-	Hi Team,
-	No Peers in Online
-	EOF
+# sendmail will use to send an email, -F will display from email name.
+sendmail -F Alerts -f alerts@example.com -t raghu@example.com << EOF
+Subject: IAX Peers status is zero
+Hi Team,
+No Peers Online
+EOF
 else
-# if condition false just prints an information
 echo "Few are Online"
 fi
